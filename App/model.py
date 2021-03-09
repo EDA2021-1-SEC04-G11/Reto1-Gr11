@@ -52,11 +52,14 @@ def newCatalog(tipo):
     """
     catalog = {'videos': None,
                'category': None,
+               "pais":None
                }
 
     catalog['videos'] = lt.newList(tipo)
     catalog['category'] = lt.newList(tipo,
-                                     cmpfunction=cmpVideosById)
+                                     cmpfunction=comparcategory)
+    catalog['pais'] = lt.newList(tipo,
+                                     cmpfunction=cmpVideosbyName)
 
     return catalog
 
@@ -68,6 +71,13 @@ def addVideo(catalog, video):
     lt.addLast(catalog['videos'], video)
     # Se obtiene el autor del video
 
+
+def addid(catalog, category):
+    """
+    Adiciona un tag a la lista de tags
+    """
+    t = newcategory(category["id"], category['name'])
+    lt.addLast(catalog['category'], t)
 
 def addVideoYoutuber(catalog, authorname, videos):
     """
@@ -82,6 +92,13 @@ def addVideoYoutuber(catalog, authorname, videos):
         channel_titlee = newAuthor(authorname)
         lt.addLast(channel_title, channel_titlee)
     lt.addLast(channel_titlee['videos'], videos)
+
+   
+
+
+
+
+
 
 
 def newAuthor(name):
@@ -108,6 +125,17 @@ def cmpVideosById(video_1, video_2):
         return 0
     else:
         return 1
+
+
+
+def cmpVideosbyName(paisname, country):
+    if (paisname.lower() == country["country"].lower()):
+        return 0
+    return -1
+
+def comparcategory(categ, id):
+    return (categ == id["categ"])
+    
 
 
 #category_id, videos_id
@@ -143,3 +171,30 @@ def sort_type(catalog, size, type):
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
     return elapsed_time_mseg, sorted_list
+
+def sortvideosbypais(catalog, size, pais, categoria):
+
+    catalog['videos'] = mt.sort(catalog["videos"], cmpVideosByViews)
+    sublista = lt.newList("ARRAY_LIST")
+    subfinal = lt.newList("ARRAY_LIST")
+    for x in range(0, lt.size(catalog["videos"])):
+
+        if lt.getElement(catalog['videos'], x)["country"] == pais:
+
+            lt.addLast(sublista, lt.getElement(catalog['videos'], x))
+    cont = 1
+    for x["element"] in sublista:
+        if x["category_id"] == categoria:
+            lt.addLast(subfinal, lt.getElement(subfinal,cont))
+    subfinal = lt.subList(subfinal, 0, size)
+
+
+    
+  
+   
+     
+   
+
+  
+  
+    return subfinal

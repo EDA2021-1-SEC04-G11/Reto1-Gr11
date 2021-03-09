@@ -31,20 +31,13 @@ El controlador se encarga de mediar entre la vista y el modelo.
 
 # Inicialización del Catálogo de libros
 
-# Funciones para la carga de datos
-
-# Funciones de ordenamiento
-
-# Funciones de consulta sobre el catálogo
-
-
 def initCatalog(tipo):
     """
     Llama la funcion de inicializacion del catalogo del modelo.
     """
     catalog = model.newCatalog(tipo)
     return catalog
-
+# Funciones para la carga de datos
 
 def loadData(catalog):
     """
@@ -53,17 +46,17 @@ def loadData(catalog):
     """
     loadVideo(catalog)
 
-
 def loadVideo(catalog):
     """
     Carga los libros del archivo.  Por cada libro se toman sus autores y por
     cada uno de ellos, se crea en la lista de autores, a dicho autor y una
     referencia al libro que se esta procesando.
     """
-    videosfile = cf.data_dir + 'videos-small.csv'
+    videosfile = cf.data_dir + 'videos-large.csv'
     input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
     for videos in input_file:
         model.addVideo(catalog, videos)
+
 
 
 def loadVideo_ID(catalog):
@@ -72,6 +65,16 @@ def loadVideo_ID(catalog):
     """
     return None
 
+def loadvideocategory(catalog):
+    videocategory = cf.data_dir + "category-id.csv"
+    input_file = csv.DictReader(open(tagsfile, encoding='utf-8'))
+    for id in input_file:
+        model.addid(catalog, id)
+
+# Funciones de ordenamiento
+
+
+
 
 def sortvideos(catalog, size):
     return model.sortvideos(catalog, size)
@@ -79,3 +82,13 @@ def sortvideos(catalog, size):
 
 def sort_type(catalog, size, type):
     return model.sort_type(catalog, size, type)
+
+
+# Funciones de consulta sobre el catálogo
+
+
+
+
+
+def sortvideosbypais(catalog, size, pais, categoria):
+    return model.sortvideosbypais(catalog, size, pais, categoria)

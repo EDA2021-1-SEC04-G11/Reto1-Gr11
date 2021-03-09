@@ -42,7 +42,7 @@ def printMenu():
     print("1- Cargar información en el catálogo")
     print("2- Consultar buenos vídeos por categoría y por país")
     print("3- Consultar videos tendencia por país")
-    print("4- videos por género/categoría")
+    print("4- videos por pais/categoría con mas views")
     print("5 Buscar los vídeos con más likes")
     print("0- Salir")
 
@@ -72,8 +72,6 @@ def printResults(ord_videos, sample=10):
             i += 1
 
 
-def sortlista(catalog, tipo):
-    return controller.sortlista(catalog, tipo)
 
 
 catalog = None
@@ -128,8 +126,16 @@ while True:
 
     elif int(inputs[0]) == 3:
         pass
+        
     elif int(inputs[0]) == 4:
-        pass
+        size = input("Indique tamaño de la muestra: ")
+        pais = input("Indique el pais: ")
+        categoria = input("Indique la categoria: ")
+        result = controller.sortvideosbypais(catalog, int(size), pais, (categoria))
+        for x in result["elements"]:
+            print(x["title"], x["views"], x["country"], x["category_id"])
+       
+        
     elif int(inputs[0]) == 5:
         size = input("Indique tamaño de la muestra: ")
         result = controller.sortvideos(catalog, int(size))
