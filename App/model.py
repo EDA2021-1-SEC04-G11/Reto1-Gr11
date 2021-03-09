@@ -85,7 +85,8 @@ def addid(catalog, category):
     """
     Adiciona un tag a la lista de tags
     """
-    lista = category["id\tname"].split("\t ")
+    
+    lista = category["id\t name"].split("\t ")
     
     category["id"]=lista[0]
     category["name"]=lista[1].strip()
