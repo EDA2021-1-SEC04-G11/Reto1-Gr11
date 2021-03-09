@@ -183,12 +183,18 @@ def sort_type(catalog, size, type):
     elapsed_time_mseg = (stop_time - start_time)*1000
     return elapsed_time_mseg, sorted_list
 
+
+ 
+
 def sortvideosbypais(catalog, size, pais, categoria):
     videos = catalog['videos']
     videospais = lt.newList()
-    pos = lt.isPresent(catalog['category'], categoria)
-   
-    categoriafinal = lt.getElement(catalog["category"], pos)
+    conet=1
+    for catg in lt.iterator(catalog['category']):
+        if catg["name"]== categoria:
+            break
+        conet += 1
+    categoriafinal = lt.getElement(catalog["category"], conet)
     for cont in range(1,  lt.size(catalog["videos"])):
         video = lt.getElement(videos, cont)
         if video["country"] == pais and video["category_id"] == categoriafinal["tag_id"]:
