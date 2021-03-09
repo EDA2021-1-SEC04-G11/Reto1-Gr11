@@ -45,6 +45,7 @@ def loadData(catalog):
     estructura de datos
     """
     loadVideo(catalog)
+    loadvideocategory(catalog)
 
 def loadVideo(catalog):
     """
@@ -52,7 +53,7 @@ def loadVideo(catalog):
     cada uno de ellos, se crea en la lista de autores, a dicho autor y una
     referencia al libro que se esta procesando.
     """
-    videosfile = cf.data_dir + 'videos-large.csv'
+    videosfile = cf.data_dir + 'videos-small.csv'
     input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
     for videos in input_file:
         model.addVideo(catalog, videos)
@@ -67,9 +68,11 @@ def loadVideo_ID(catalog):
 
 def loadvideocategory(catalog):
     videocategory = cf.data_dir + "category-id.csv"
-    input_file = csv.DictReader(open(tagsfile, encoding='utf-8'))
+    input_file = csv.DictReader(open(videocategory, encoding='utf-8'))
     for id in input_file:
         model.addid(catalog, id)
+    
+    
 
 # Funciones de ordenamiento
 

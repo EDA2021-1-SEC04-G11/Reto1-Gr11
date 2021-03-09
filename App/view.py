@@ -132,8 +132,8 @@ while True:
         pais = input("Indique el pais: ")
         categoria = input("Indique la categoria: ")
         result = controller.sortvideosbypais(catalog, int(size), pais, (categoria))
-        for x in result["elements"]:
-            print(x["title"], x["views"], x["country"], x["category_id"])
+        for x in lt.iterator(result):
+            print(x["title"],x["views"])
        
         
     elif int(inputs[0]) == 5:

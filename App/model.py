@@ -52,14 +52,14 @@ def newCatalog(tipo):
     """
     catalog = {'videos': None,
                'category': None,
-               "pais":None
+               "tranding":None
                }
 
     catalog['videos'] = lt.newList(tipo)
     catalog['category'] = lt.newList(tipo,
                                      cmpfunction=comparcategory)
-    catalog['pais'] = lt.newList(tipo,
-                                     cmpfunction=cmpVideosbyName)
+    catalog['tranding'] = lt.newList(tipo,
+                                     cmpfunction=cmpVideosbytranding)
 
     return catalog
 
@@ -71,13 +71,30 @@ def addVideo(catalog, video):
     lt.addLast(catalog['videos'], video)
     # Se obtiene el autor del video
 
+def newcategory(id, name):
+    """
+    Esta estructura almancena los tags utilizados para marcar libros.
+    """
+    tag = {'name': '', 'tag_id': ''}
+    tag['name'] = name
+    tag['tag_id'] = id
+    return tag
+
 
 def addid(catalog, category):
     """
     Adiciona un tag a la lista de tags
     """
+    lista = category["id\tname"].split("\t ")
+    
+    category["id"]=lista[0]
+    category["name"]=lista[1].strip()
     t = newcategory(category["id"], category['name'])
     lt.addLast(catalog['category'], t)
+
+
+
+
 
 def addVideoYoutuber(catalog, authorname, videos):
     """
@@ -95,12 +112,6 @@ def addVideoYoutuber(catalog, authorname, videos):
 
    
 
-
-
-
-
-
-
 def newAuthor(name):
     """
     Crea una nueva estructura para modelar los videos de
@@ -114,8 +125,7 @@ def newAuthor(name):
 # Funciones de comparación
 
 
-def cmpVideosByViews(video1, video2):
-    return (float(video1['views']) < float(video2['views']))
+
 
 
 def cmpVideosById(video_1, video_2):
@@ -134,7 +144,8 @@ def cmpVideosbyName(paisname, country):
     return -1
 
 def comparcategory(categ, id):
-    return (categ == id["categ"])
+    
+    return (categ == id["name"])
     
 
 
@@ -173,28 +184,39 @@ def sort_type(catalog, size, type):
     return elapsed_time_mseg, sorted_list
 
 def sortvideosbypais(catalog, size, pais, categoria):
+    videos = catalog['videos']
+    videospais = lt.newList()
+    pos = lt.isPresent(catalog['category'], categoria)
+   
+    categoriafinal = lt.getElement(catalog["category"], pos)
+    for cont in range(1,  lt.size(catalog["videos"])):
+        video = lt.getElement(videos, cont)
+        if video["country"] == pais and video["category_id"] == categoriafinal["tag_id"]:
 
-    catalog['videos'] = mt.sort(catalog["videos"], cmpVideosByViews)
-    sublista = lt.newList("ARRAY_LIST")
-    subfinal = lt.newList("ARRAY_LIST")
-    for x in range(0, lt.size(catalog["videos"])):
-
-        if lt.getElement(catalog['videos'], x)["country"] == pais:
-
-            lt.addLast(sublista, lt.getElement(catalog['videos'], x))
-    cont = 1
-    for x["element"] in sublista:
-        if x["category_id"] == categoria:
-            lt.addLast(subfinal, lt.getElement(subfinal,cont))
-    subfinal = lt.subList(subfinal, 0, size)
-
-
+            lt.addLast(videospais, video)
+    videospais= mt.sort(videospais, cmpVideosByViews)
+    videospaisfinal = lt.subList(videospais, 0, size)
     
+
+    return videospaisfinal
+
+
+   
+
+
   
-   
-     
-   
+
 
   
   
-    return subfinal
+
+
+def cmpVideosByViews(video1, video2):
+    return (float(video1['views']) > float(video2['views']))
+
+def cmpVideosbytranding(video1, video2):
+    return (float(video1['views']) > float(video2['views']))
+
+    #trandingdate = 18.07.05
+
+    #publishtime= 2018-05-06T22:24:01.000Z
