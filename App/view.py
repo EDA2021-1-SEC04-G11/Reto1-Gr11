@@ -40,11 +40,12 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- Consultar buenos vídeos por categoría y por país")
-    print("3- Consultar videos tendencia por país")
-    print("4- videos por pais/categoría con mas views")
+    print("2- Lab organizar videos")
+    print("3- Req 2 Consultar videos tendencia por país")
+    print("4- Req 1 videos por pais/categoría con mas views")
     print("5 Buscar los vídeos con más likes")
-    print("6- Req 4")
+    print("6- Req  4/ Buscar videos con más likes y tag")
+    print("7- req 3")
     print("0- Salir")
 
 
@@ -71,8 +72,6 @@ def printResults(ord_videos, sample=10):
             video = lt.getElement(ord_videos, i)
             print("Titulo: " + video["channel_title"])
             i += 1
-
-
 
 
 catalog = None
@@ -126,29 +125,45 @@ while True:
         print("Tiempo transcurrido: ", answer[0], " ms")
 
     elif int(inputs[0]) == 3:
-        categoria = input("Indique la categoria: ")
-        result = controller.sortvideosbycattrending(catalog, (categoria))
-        print(result["title"],result["category_id"])
         
+        
+        print("Este es el req 2")
+        country = input(
+            "Ingrese el país al que le gustaría ver el vídeo con más días como tendencia:\n")
+        result = controller.number_one_video(catalog, country)
+        print(result)
+
     elif int(inputs[0]) == 4:
         size = input("Indique tamaño de la muestra: ")
         pais = input("Indique el pais: ")
         categoria = input("Indique la categoria: ")
-        result = controller.sortvideosbypais(catalog, int(size), pais, (categoria))
+        result = controller.sortvideosbypais(
+            catalog, int(size), pais, (categoria))
         for x in lt.iterator(result):
-            print(x["title"],x["views"])
-       
-        
+            print(x["trending_date"], x["title"], x["publish_time"], x["channel_title"], x["views"], x["likes"], x["dislikes"])
+
     elif int(inputs[0]) == 5:
         size = input("Indique tamaño de la muestra: ")
         result = controller.sortvideos(catalog, int(size))
         print("Para la muestra de", size, " elementos, el tiempo (mseg) es: ",
                                           str(result[0]))
-        printResults(result[1])
+        print(result[1])
 
-
-
-       
+    elif int(inputs[0]) == 6:
+        print("Este es el req 4")
+        size = input("Indique tamaño de la muestra: ")
+        tag = input("Indique el parámetro tag por el que le gustaría buscar")
+        country = input("Indique el país por el que le gustaría buscar")
+        result = controller.VideoByTagLikes(
+            catalog, country, int(size), str(tag))
+        for x in lt.iterator(result[0]):
+            print({"Title": x["title"], "channel_title": x["channel_title"], "Publish_time": x["publish_time"],
+                   "views": x["views"], "Likes": x["likes"], "Dislikes": x["dislikes"], "Tags": x["tags"], "elapsed_time": result[1]})
+    elif int(inputs[0]) == 7:
+        
+        categoria = input("Indique la categoria: ")
+        result = controller.sortvideosbycattrending(catalog, categoria)
+        print(result["title"], result["channel_title"], result["category_id"])
     else:
         sys.exit(0)
 sys.exit(0)
