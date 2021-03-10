@@ -44,6 +44,7 @@ def printMenu():
     print("3- Consultar videos tendencia por país")
     print("4- videos por pais/categoría con mas views")
     print("5 Buscar los vídeos con más likes")
+    print("6- Requerimiento 4/ Buscar videos con más likes y tag")
     print("0- Salir")
 
 
@@ -70,8 +71,6 @@ def printResults(ord_videos, sample=10):
             video = lt.getElement(ord_videos, i)
             print("Titulo: " + video["channel_title"])
             i += 1
-
-
 
 
 catalog = None
@@ -125,23 +124,37 @@ while True:
         print("Tiempo transcurrido: ", answer[0], " ms")
 
     elif int(inputs[0]) == 3:
-        pass
-        
+        print("Este es el req 2")
+        country = input(
+            "Ingrese el país al que le gustaría ver el vídeo con más días como tendencia:\n")
+        result = controller.number_one_video(catalog, country)
+        print(result)
+
     elif int(inputs[0]) == 4:
         size = input("Indique tamaño de la muestra: ")
         pais = input("Indique el pais: ")
         categoria = input("Indique la categoria: ")
-        result = controller.sortvideosbypais(catalog, int(size), pais, (categoria))
+        result = controller.sortvideosbypais(
+            catalog, int(size), pais, (categoria))
         for x in lt.iterator(result):
-            print(x["title"],x["views"])
-       
-        
+            print(x["title"], x["views"])
+
     elif int(inputs[0]) == 5:
         size = input("Indique tamaño de la muestra: ")
         result = controller.sortvideos(catalog, int(size))
         print("Para la muestra de", size, " elementos, el tiempo (mseg) es: ",
                                           str(result[0]))
         printResults(result[1])
+    elif int(inputs[0]) == 6:
+        print("Este es el req 4")
+        size = input("Indique tamaño de la muestra: ")
+        tag = input("Indique el parámetro tag por el que le gustaría buscar")
+        country = input("Indique el país por el que le gustaría buscar")
+        result = controller.VideoByTagLikes(
+            catalog, country, int(size), str(tag))
+        for x in lt.iterator(result[0]):
+            print({"Title": x["title"], "channel_title": x["channel_title"], "Publish_time": x["publish_time"],
+                   "views": x["views"], "Likes": x["likes"], "Dislikes": x["dislikes"], "Tags": x["tags"], "elapsed_time": result[1]})
     else:
         sys.exit(0)
 sys.exit(0)
