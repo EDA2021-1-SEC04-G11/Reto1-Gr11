@@ -63,14 +63,6 @@ def newCatalog(tipo):
 
     return catalog
 
-# Funciones para agregar informacion al catalogo
-
-
-def addVideo(catalog, video):
-    # Se adiciona el video a la lista de videos
-    lt.addLast(catalog['videos'], video)
-    # Se obtiene el autor del video
-
 
 def newcategory(id, name):
     """
@@ -80,6 +72,15 @@ def newcategory(id, name):
     tag['name'] = name
     tag['tag_id'] = id
     return tag
+
+
+# Funciones para agregar informacion al catalogo
+
+
+def addVideo(catalog, video):
+    # Se adiciona el video a la lista de videos
+    lt.addLast(catalog['videos'], video)
+    # Se obtiene el autor del video
 
 
 def addid(catalog, category):
@@ -94,31 +95,6 @@ def addid(catalog, category):
     t = newcategory(category["id"], category['name'])
     lt.addLast(catalog['category'], t)
 
-
-def addVideoYoutuber(catalog, authorname, videos):
-    """
-    Adiciona un youtuber a lista de youtubers, la cual guarda referencias
-    a los videos de dicho youtuber
-    """
-    channel_title = catalog['channel_title']
-    poschannel_title = lt.isPresent(channel_title, authorname)
-    if poschannel_title > 0:
-        channel_titlee = lt.getElement(channel_title, poschannel_title)
-    else:
-        channel_titlee = newAuthor(authorname)
-        lt.addLast(channel_title, channel_titlee)
-    lt.addLast(channel_titlee['videos'], videos)
-
-
-def newAuthor(name):
-    """
-    Crea una nueva estructura para modelar los videos de
-    un autor y su promedio de ratings
-    """
-    channel_titlee = {'name': "", "videos": None,  "likes": 0}
-    channel_titlee['name'] = name
-    channel_titlee['videos'] = lt.newList('ARRAY_LIST')
-    return channel_titlee
 
 # Funciones de comparación
 
@@ -147,9 +123,29 @@ def comparcategory(categ, id):
     return (categ == id["name"])
 
 
-#category_id, videos_id
+def cmpVideosByViews(video1, video2):
+    return (float(video1['views']) > float(video2['views']))
 
-# Funciones para sort
+
+def cmpVideosbytranding(video1, video2):
+    if video1["video_id"] < video2["video_id"]:
+        return -1
+    elif video1["video_id"] == video2["video_id"]:
+        return 0
+    else:
+        return 1
+
+
+def cmpfunctionByVideoid(element1, element2):
+    if element1['video_id'] == element2['video_id']:
+        return 0
+    elif element1['video_id'] < element2['video_id']:
+        return -1
+    else:
+        return 1
+
+
+# Funciones para sort y consultar
 
 
 def sortvideos(catalog, size):
@@ -186,6 +182,7 @@ def sortvideosbypais(catalog, size, pais, categoria):
     videos = catalog['videos']
     videospais = lt.newList()
     conet = 1
+    start_time = time.process_time()
     for catg in lt.iterator(catalog['category']):
         if catg["name"] == categoria:
             break
@@ -198,16 +195,19 @@ def sortvideosbypais(catalog, size, pais, categoria):
             lt.addLast(videospais, video)
     videospais = mt.sort(videospais, cmpVideosByViews)
     videospaisfinal = lt.subList(videospais, 0, size)
+    stop_time = time.process_time()
+    elapsed_time_mseg = (stop_time - start_time)*1000
 
-    return videospaisfinal
+    return (videospaisfinal, elapsed_time_mseg)
 
 
 def sortvideosbycattrending(catalog, categoria):
     videos = catalog['videos']
     videospais = lt.newList("ARRAY_LIST")
-    conet=1
+    start_time = time.process_time()
+    conet = 1
     for catg in lt.iterator(catalog['category']):
-        if catg["name"]== categoria:
+        if catg["name"] == categoria:
             break
         conet += 1
     categoriafinal = lt.getElement(catalog["category"], conet)
@@ -216,38 +216,30 @@ def sortvideosbycattrending(catalog, categoria):
         if video["category_id"] == categoriafinal["tag_id"]:
 
             lt.addLast(videospais, video)
-    lista=[]
-    dic={
+    lista = []
+    dic = {
     }
-    max=0
+    max = 0
     titulo = ""
     for pos in range(1,  lt.size(videospais)):
-        videoid = lt.getElement(videospais,pos)
-        if videoid["video_id"] != "#NAME?" :
+        videoid = lt.getElement(videospais, pos)
+        if videoid["video_id"] != "#NAME?":
 
             lista.append(videoid["video_id"])
-            dic[videoid["video_id"]]= videoid
-            
+            dic[videoid["video_id"]] = videoid
+
     for x in lista:
         if lista.count(x) > max:
-            max= lista.count(x)
+            max = lista.count(x)
             titulo = x
-    
 
-
-    print("dias : " +str(max))   
+    print("dias : " + str(max))
+    stop_time = time.process_time()
+    elapsed_time_mseg = (stop_time - start_time)*1000
+    print("Elapsed Time ms:", elapsed_time_mseg)
     return (dic[titulo])
-    
-
-        
 
 
-
-
-    
-
-
-   
 def number_one_video(catalog, country):
 
     videos = catalog["videos"]
@@ -282,7 +274,7 @@ def number_one_video(catalog, country):
         if ct == country and vid_id == video_id:
             lt.addLast(sublist_title, lt.getElement(catalog['videos'], x))
     videoTrend = mt.sort(sublist_title, cmpVideosByViews)
-    videoTrend = lt.subList(videoTrend, 0, 1)
+    videoTrend = lt.subList(videoTrend, 0, 1)  # Duda si comienza en 0
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
 
@@ -307,31 +299,5 @@ def VideoByTagLikes(catalog, country, size, tag):
 
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
-
-    return (final_lt, elapsed_time_mseg)
-
-
-def cmpVideosByViews(video1, video2):
-    return (float(video1['views']) > float(video2['views']))
-
-
-def cmpVideosbytranding(video1, video2):
-    if video1["video_id"] < video2["video_id"]:
-        return -1
-    elif video1["video_id"] == video2["video_id"]:
-        return 0
-    else:
-        return 1
-
-
-def cmpfunctionByVideoid(element1, element2):
-    if element1['video_id'] == element2['video_id']:
-        return 0
-    elif element1['video_id'] < element2['video_id']:
-        return -1
-    else:
-        return 1
-
-    # trandingdate = 18.07.05
-
-    # publishtime= 2018-05-06T22:24:01.000Z
+    print("Elapsed Time:", elapsed_time_mseg)
+    return (final_lt)

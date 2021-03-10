@@ -92,9 +92,11 @@ def sort_type(catalog, size, type):
 
 def sortvideosbypais(catalog, size, pais, categoria):
     return model.sortvideosbypais(catalog, size, pais, categoria)
-    
+
+
 def sortvideosbycattrending(catalog, categoria):
     return model.sortvideosbycattrending(catalog, (categoria))
+
 
 def number_one_video(catalog, country):
     return model.number_one_video(catalog, country)
