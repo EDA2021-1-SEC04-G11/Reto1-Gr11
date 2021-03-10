@@ -208,6 +208,51 @@ def sortvideosbypais(catalog, size, pais, categoria):
     return videospaisfinal
 
 
+def sortvideosbycattrending(catalog, categoria):
+    videos = catalog['videos']
+    videospais = lt.newList("ARRAY_LIST")
+    conet=1
+    for catg in lt.iterator(catalog['category']):
+        if catg["name"]== categoria:
+            break
+        conet += 1
+    categoriafinal = lt.getElement(catalog["category"], conet)
+    for cont in range(1,  lt.size(catalog["videos"])):
+        video = lt.getElement(videos, cont)
+        if video["category_id"] == categoriafinal["tag_id"]:
+
+            lt.addLast(videospais, video)
+    lista=[]
+    dic={
+    }
+    max=0
+    titulo = ""
+    for pos in range(1,  lt.size(videospais)):
+        videoid = lt.getElement(videospais,pos)
+        if videoid["video_id"] != "#NAME?" :
+
+            lista.append(videoid["video_id"])
+            dic[videoid["video_id"]]= videoid
+            
+    for x in lista:
+        if lista.count(x) > max:
+            max= lista.count(x)
+            titulo = x
+    
+
+
+    print("dias : " +str(max))   
+    return (dic[titulo])
+    
+
+        
+
+
+
+
+    
+
+
    
 
 
@@ -222,7 +267,12 @@ def cmpVideosByViews(video1, video2):
     return (float(video1['views']) > float(video2['views']))
 
 def cmpVideosbytranding(video1, video2):
-    return (float(video1['views']) > float(video2['views']))
+    if video1["video_id"] < video2["video_id"]:
+        return -1
+    elif video1["video_id"] == video2["video_id"]:
+        return 0
+    else:
+        return 1
 
     #trandingdate = 18.07.05
 

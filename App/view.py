@@ -44,6 +44,7 @@ def printMenu():
     print("3- Consultar videos tendencia por país")
     print("4- videos por pais/categoría con mas views")
     print("5 Buscar los vídeos con más likes")
+    print("6- Req 4")
     print("0- Salir")
 
 
@@ -125,7 +126,9 @@ while True:
         print("Tiempo transcurrido: ", answer[0], " ms")
 
     elif int(inputs[0]) == 3:
-        pass
+        categoria = input("Indique la categoria: ")
+        result = controller.sortvideosbycattrending(catalog, (categoria))
+        print(result["title"],result["category_id"])
         
     elif int(inputs[0]) == 4:
         size = input("Indique tamaño de la muestra: ")
@@ -142,6 +145,10 @@ while True:
         print("Para la muestra de", size, " elementos, el tiempo (mseg) es: ",
                                           str(result[0]))
         printResults(result[1])
+
+
+
+       
     else:
         sys.exit(0)
 sys.exit(0)
