@@ -243,6 +243,7 @@ def sortvideosbycattrending(catalog, categoria):
 def number_one_video(catalog, country):
 
     videos = catalog["videos"]
+    videos = mt.sort(videos, cmpfunctionByVideoid)
     sublist_country = lt.newList("ARRAY_LIST")
     start_time = time.process_time()
 
@@ -251,7 +252,6 @@ def number_one_video(catalog, country):
         if pays == country.lower():
             lt.addLast(sublist_country, lt.getElement(catalog['videos'], x))
     lt_country = sublist_country
-    lt_country = mt.sort(lt_country, cmpfunctionByVideoid)
 
     sublist_title = lt.newList("ARRAY_LIST")
     j = lt_country["elements"]
@@ -274,7 +274,7 @@ def number_one_video(catalog, country):
         if ct == country and vid_id == video_id:
             lt.addLast(sublist_title, lt.getElement(catalog['videos'], x))
     videoTrend = mt.sort(sublist_title, cmpVideosByViews)
-    videoTrend = lt.subList(videoTrend, 0, 1)  # Duda si comienza en 0
+    videoTrend = lt.subList(videoTrend, 1, 1)
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
 
